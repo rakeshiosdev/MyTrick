@@ -9,13 +9,13 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.nestedArray()
         self.filterElement()
     }
-
+    
 }
 
 
@@ -23,30 +23,30 @@ class ViewController: UIViewController {
 extension ViewController {
     
     fileprivate func nestedArray(){
-        let simpleArray = flatternArray(nestedArray: [1,2,3,4,5])
+        let simpleArray = flatteredArray(array: [1,2,3,4,5])
         print("simpleArray: \(simpleArray)")
         
-        let nestedArray = flatternArray(nestedArray: [1,2,3,4,5, [6,7,8,9]])
+        let nestedArray = flatteredArray(array: [1,2,3,4,5, [6,7,8,9]])
         print("nestedArray: \(nestedArray)")
     }
     
-    func flatternArray(nestedArray: [Any]) -> [Int] {
-        var myFlattenedArray = [Int]()
+    func flatteredArray(array: [Any]) -> [Int] {
+        var myArray = [Int]()
         
-        for element in nestedArray {
+        for element in array {
             if element is Int {
-                myFlattenedArray.append(element as! Int)
+                myArray.append(element as! Int)
                 
-            } else if element is [Int] {
-                let nestedElement = element as! [Int]
-                for num in nestedElement {
-                    myFlattenedArray.append(num)
+            }else if element is [Any] {
+                let recursiveElement = flatteredArray(array: element as! [Any])
+                for num in recursiveElement {
+                    myArray.append(num)
                 }
             }
         }
-        
-        return myFlattenedArray
+        return myArray
     }
+    
     
 }
 

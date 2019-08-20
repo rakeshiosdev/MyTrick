@@ -75,3 +75,63 @@ extension ViewController {
     }
     
 }
+
+//MARK: Show popup
+extension ViewController {
+    func showPopup(_ viewAlert: UIView, withBlackTransperentView viewblackTransperent: UIView, with isAlertShow: Bool) {
+        if isAlertShow {
+            viewAlert.isHidden = true
+            UIView.animate(withDuration: 0.5, animations: {() -> Void in
+                viewAlert.transform = CGAffineTransform.identity
+                viewAlert.transform = CGAffineTransform(scaleX: 0, y: 0)
+                viewblackTransperent.isHidden = true
+            }, completion: {(_ finished: Bool) -> Void in
+                viewAlert.isHidden = true
+            })
+        }
+        if !isAlertShow {
+            let window = UIApplication.shared.keyWindow!
+            viewAlert.center = window.center
+            window.addSubview(viewAlert)
+            viewAlert.transform = CGAffineTransform(scaleX: 0, y: 0)
+            viewAlert.isHidden = false
+            UIView.animate(withDuration: 0.5, animations: {() -> Void in
+                viewAlert.transform = CGAffineTransform.identity
+                viewblackTransperent.isHidden = false
+            }, completion: {(_ finished: Bool) -> Void in
+            })
+        }
+    }
+}
+
+
+extension ViewController {
+    /**
+     presents asimple UIAlertViewController with title message like android's toast.
+     
+     - Parameters:
+     - title: title of alert.
+     - message : message to be shown.
+     - vc : object of ViewController where it should be presented.
+     - time : time in second of showing.
+     
+     */
+    class func toast(title: String, message: String, vc: UIViewController,time : Double, CompletionHandler : (()->Void)?) {
+        let attributedString = NSAttributedString(string: title, attributes: [
+            NSAttributedString.Key.font : UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.bold), //your font here
+            NSAttributedString.Key.foregroundColor : UIColor.orange
+            ])
+        let alert = UIAlertController(title:"", message:message, preferredStyle: UIAlertController.Style.alert)
+        alert.setValue(attributedString, forKey: "attributedTitle")
+        vc.present(alert, animated: true) {
+            Timer.scheduledTimer(withTimeInterval:time , repeats: false, block: {_ in
+                vc.dismiss(animated: true, completion: {
+                    if let handler = CompletionHandler{
+                        handler()
+                    }
+                })
+            })
+        }
+        alert.view.tintColor = UIColor.orange
+    }
+}
